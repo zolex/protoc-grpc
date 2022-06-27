@@ -1,12 +1,12 @@
-ARG PHP_VERSION="8.0.9"
+ARG PHP_VERSION="8.1"
 
 FROM php:${PHP_VERSION}-alpine AS build
 
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 
-ARG GRPC_VERSION="1.36.0"
-ARG GRPC_WEB_VERSION="1.2.1"
-ARG PROTOBUF_VERSION="3.15.5"
+ARG GRPC_VERSION="1.46.3"
+ARG GRPC_WEB_VERSION="1.3.1"
+ARG PROTOBUF_VERSION="3.21.1"
 
 RUN apk add --no-cache --virtual .build-deps cmake make g++ git zlib-dev \
     && apk add go --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
@@ -16,7 +16,7 @@ RUN apk add --no-cache --virtual .build-deps cmake make g++ git zlib-dev \
     && cd /protoc/grpc && mkdir cmake/build && cd cmake/build && cmake ../.. && make protoc grpc_php_plugin \
     && mv /protoc/grpc/cmake/build/grpc_php_plugin /usr/local/bin/grpc_php_plugin \
     && ls -lah /protoc/grpc/cmake/build/third_party/protobuf/ \
-    && mv /protoc/grpc/cmake/build/third_party/protobuf/protoc-3.14.0.0 /usr/local/bin/protoc \
+    && mv /protoc/grpc/cmake/build/third_party/protobuf/protoc-3.19.4.0 /usr/local/bin/protoc \
     && cd /protoc && git clone https://github.com/spiral/php-grpc.git \
     && cd /protoc/php-grpc/cmd/rr-grpc && go get -t . && go install \
     && cd /protoc/php-grpc/cmd/protoc-gen-php-grpc && go get -t . && go install \
